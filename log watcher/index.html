@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #log {
+            white-space: pre-wrap;
+            background-color: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ccc;
+            height: 400px;
+            overflow-y: scroll;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Real-Time Log Viewer</h1>
+    <div id="log"></div>
+    <script>
+        const logDiv = document.getElementById('log');
+        const socket = new WebSocket('ws://localhost:6789')
+        socket.onmessage = (event) => {
+            const newContent = document.createTextNode(event.data + '\n');
+
+            logDiv.appendChild(newContent);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        };
+
+        socket.onerror = function (error) {
+            console.error('WebSocket error: ', error);
+        };
+
+        socket.onclose = function (event) {
+            console.warn('WebSocket closed: ', event);
+        };
+
+    </script>
+</body>
+
+</html>
